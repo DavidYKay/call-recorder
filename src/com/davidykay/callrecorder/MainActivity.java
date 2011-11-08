@@ -1,6 +1,6 @@
 package com.davidykay.callrecorder;
 
-import java.io.FileDescriptor;
+import java.io.File;
 import java.io.IOException;
 
 import android.app.Activity;
@@ -12,7 +12,7 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
       
-  private FileDescriptor PATH_NAME;
+  private String PATH_NAME;
   private MediaRecorder mRecorder; 
 
   ////////////////////////////////////////
@@ -29,7 +29,10 @@ public class MainActivity extends Activity {
     mRecorder = new MediaRecorder();
     initRecorder();
 
-    PATH_NAME = "this/is/my/path";
+    //PATH_NAME = new FileDescriptor("this/is/my/path");
+    //File file = new File(getExternalFilesDir(null), "transcript.wav");
+    //PATH_NAME = file.getAbsolutePath();
+    PATH_NAME = "/sdcard/transcript.wav";
     
     // Init View
     setContentView(R.layout.main);
