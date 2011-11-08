@@ -25,14 +25,20 @@ public class MainActivity extends Activity {
     super.onCreate(savedInstanceState);
 
     // Init Model
-
-    mRecorder = new MediaRecorder();
-    initRecorder();
-
+    
     //PATH_NAME = new FileDescriptor("this/is/my/path");
     //File file = new File(getExternalFilesDir(null), "transcript.wav");
     //PATH_NAME = file.getAbsolutePath();
-    PATH_NAME = "/sdcard/transcript.wav";
+    PATH_NAME = "/sdcard/transcript.3gp";
+
+    mRecorder = new MediaRecorder();
+    try {
+      initRecorder(PATH_NAME);
+    } catch (IOException e) {      
+      e.printStackTrace();
+      throw new RuntimeException("Couldn't init Recorder with path: " + PATH_NAME);
+    }
+
     
     // Init View
     setContentView(R.layout.main);
@@ -79,12 +85,18 @@ public class MainActivity extends Activity {
     cleanupRecorder();
   }
 
-  public boolean initRecorder() {
+  public boolean initRecorder(String path) throws IOException {
+    // make sure the directory we plan to store the recording in exists
+    File directory = new File(path).getParentFile();
+    if (!directory.exists() && !directory.mkdirs()) {
+      throw new IOException("Path to file could not be created.");
+    }
+
     mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
     mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
     mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
-    mRecorder.setOutputFile(PATH_NAME);
+    mRecorder.setOutputFile(path);
     try {
       mRecorder.prepare();
       return true;
